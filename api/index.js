@@ -8,6 +8,10 @@ const app = express()
 app.use(express.json())
 app.use(cors({ origin: 'http://localhost:4200' }))
 
+app.get('', (req, res) => {
+  res.send('Welcome to the RankMaster API!')
+})
+
 app.post('/send', (req, res) => {
   try {
     // sendEmail(req.body.email)
