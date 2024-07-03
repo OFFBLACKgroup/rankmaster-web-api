@@ -6,7 +6,7 @@ import { sendEmail, uploadEmail } from './functions.js';
 const app = express()
 
 app.use(express.json())
-app.use(cors({ origin: 'http://localhost:4200' }))
+app.use(cors({ origin: 'https://www.rankmaster.click/' }))
 
 app.get('', (req, res) => {
   res.send('Welcome to the RankMaster API!')
@@ -14,7 +14,7 @@ app.get('', (req, res) => {
 
 app.post('/send', (req, res) => {
   try {
-    // sendEmail(req.body.email)
+    sendEmail(req.body.email)
     uploadEmail(req.body.email)
     res.sendStatus(200)
   } catch (error) {
@@ -22,10 +22,6 @@ app.post('/send', (req, res) => {
     res.sendStatus(404)
   }
 });
-
-app.get('/test', (req, res) => {
-  res.send('Hello')
-})
 
 const port = 3000;
 
