@@ -19,7 +19,7 @@ export async function sendEmail(email) {
     {
       method: 'POST',
       headers: {
-        Authorization: 'Basic ' + Buffer.from("api:" + process.env.MAILGUN_KEY).toString('base64')
+        Authorization: 'Basic ' + Buffer.from(`api:${process.env.MAILGUN_KEY}`).toString('base64')
       },
       body: form
     }
