@@ -13,6 +13,7 @@ app.get('', (req, res) => {
 })
 
 app.post('/send', (req, res) => {
+  console.log('STARTING')
   try {
     sendEmail(req.body.email)
     uploadEmail(req.body.email)
