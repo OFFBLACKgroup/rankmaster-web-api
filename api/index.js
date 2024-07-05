@@ -28,7 +28,7 @@ app.get('/testDownload', (req, res) => {
   try {
     const { data, error } = downloadTest()
     console.log(error)
-    res.status(200).json(data)
+    res.json(data)
   } catch (error) {
     console.log(error)
     res.status(404).send()
