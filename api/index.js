@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors'
-import { sendEmail, uploadEmail } from './functions.js';
+import { downloadTest, sendEmail, uploadEmail } from './functions.js';
 
 
 const app = express()
@@ -23,6 +23,17 @@ app.post('/send', (req, res) => {
     res.sendStatus(404)
   }
 });
+
+app.get('testDownload', (req, res) => {
+  try {
+    const { data, error } = downloadTest()
+    console.log(error)
+    res.status(200).send(data)
+  } catch (error) {
+    console.log(error)
+    res.status(404).send()
+  }
+})
 
 const port = 3000;
 
