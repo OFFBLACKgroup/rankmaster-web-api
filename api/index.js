@@ -24,9 +24,9 @@ app.post('/send', (req, res) => {
   }
 });
 
-app.get('/testDownload', (req, res) => {
+app.get('/testDownload', async (req, res) => {
   try {
-    const something = downloadTest()
+    const something = await downloadTest()
     console.log('Somehing', something)
     res.status(200).send()
   } catch (error) {
