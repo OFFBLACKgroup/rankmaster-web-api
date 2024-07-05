@@ -38,11 +38,7 @@ export async function uploadEmail(email) {
 }
 
 export async function downloadTest() {
-  const { data, error } = await supabase
+  return { data, error } = await supabase
   .from('emails')
   .select()
-
-  console.log('Inner:', data, 'Error:', error)
-
-  return data
 }
