@@ -38,7 +38,9 @@ export async function uploadEmail(email) {
 }
 
 export async function downloadTest() {
-  return { data, error } = await supabase
+  const { data, error } = await supabase
   .from('emails')
   .select()
+
+  return data
 }
