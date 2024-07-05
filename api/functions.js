@@ -42,5 +42,7 @@ export async function downloadTest() {
   .from('emails')
   .select()
 
+  console.log('Inner:', data, 'Error:', error)
+
   return data
 }
