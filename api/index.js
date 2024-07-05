@@ -27,8 +27,7 @@ app.post('/send', (req, res) => {
 app.get('/testDownload', (req, res) => {
   try {
     const data = downloadTest()
-    console.log(data, typeof(data))
-    res.json(data)
+    res.json(JSON.stringify(data))
   } catch (error) {
     console.log(error)
     res.status(404).send()
