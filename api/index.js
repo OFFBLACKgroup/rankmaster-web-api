@@ -24,7 +24,7 @@ app.post('/send', (req, res) => {
   }
 });
 
-app.get('testDownload', (req, res) => {
+app.get('/testDownload', (req, res) => {
   try {
     const { data, error } = downloadTest()
     console.log(error)
