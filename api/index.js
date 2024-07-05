@@ -12,11 +12,11 @@ app.get('', (req, res) => {
   res.send('Welcome to the RankMaster API!')
 })
 
-app.post('/send', (req, res) => {
+app.post('/send', async (req, res) => {
   console.log('STARTING')
   try {
-    sendEmail(req.body.email)
-    uploadEmail(req.body.email)
+    await sendEmail(req.body.email)
+    await uploadEmail(req.body.email)
     res.sendStatus(200)
   } catch (error) {
     console.log(error)
@@ -26,9 +26,8 @@ app.post('/send', (req, res) => {
 
 app.get('/testDownload', async (req, res) => {
   try {
-    const something = await downloadTest()
-    console.log('Somehing', something)
-    res.status(200).send()
+    const data = await downloadTest()
+    res.status(200).json(data)
   } catch (error) {
     console.log(error)
     res.status(404).send()
