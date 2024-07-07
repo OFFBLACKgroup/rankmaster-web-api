@@ -13,9 +13,9 @@ app.get('', (req, res) => {
 })
 
 app.post('/send', async (req, res) => {
-  console.log('STARTING')
   try {
-    await sendEmail(req.body.email)
+    const data = await sendEmail(req.body.email)
+    console.log(data)
     await uploadEmail(req.body.email)
     res.sendStatus(200)
   } catch (error) {

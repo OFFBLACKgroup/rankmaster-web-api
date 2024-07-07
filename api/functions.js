@@ -25,26 +25,28 @@ export async function sendEmail(email) {
     }
   );
   const data = await resp.text()
-  console.log(data);
+  return data
 }
 
 export async function uploadEmail(email) {
   const { error } = await supabase
   .from('emails')
   .insert({ email: email })
+  
   if (error) {
-    console.log("Error: ", error)
+    throw new Error(error)
   }
 }
 
 export async function downloadTest() {
   const { data, error } = await supabase
-  .from('emails')
+  .from('tierlist_items')
   .select()
+  .eq('tierlist_ID', 4)
 
-  if (error) { 
-    return error 
-  } else { 
+  if (error) {
+    throw new Error(error)
+  } else {
     return data
   }
 }
