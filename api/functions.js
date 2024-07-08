@@ -50,3 +50,16 @@ export async function downloadTest() {
     return data
   }
 }
+
+export async function fetchTopicTierlists(topicID) {
+  const { data, error } = await supabase
+  .from('tierlists')
+  .select()
+  .eq('topic_ID', topicID)
+
+  if (error) {
+    throw new Error(error)
+  } else {
+    return data
+  }
+}

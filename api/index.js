@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors'
-import { downloadTest, sendEmail, uploadEmail } from './functions.js';
+import { downloadTest, sendEmail, uploadEmail, fetchTopicTierlists } from './functions.js';
 
 
 const app = express()
@@ -27,6 +27,17 @@ app.post('/send', async (req, res) => {
 app.get('/testDownload', async (req, res) => {
   try {
     const data = await downloadTest()
+    res.status(200).json(data)
+  } catch (error) {
+    console.log(error)
+    res.status(404).send()
+  }
+})
+
+app.get('/fetchTopicTierlists/:id', async (req, res) => {
+  try {
+    console.log(req.params.id)
+    const data = await fetchTopicTierlists(req.params.id)
     res.status(200).json(data)
   } catch (error) {
     console.log(error)
