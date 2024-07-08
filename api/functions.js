@@ -38,11 +38,11 @@ export async function uploadEmail(email) {
   }
 }
 
-export async function downloadTest() {
+export async function fetchTopic(topicID) {
   const { data, error } = await supabase
-  .from('tierlist_items')
+  .from('tierlists')
   .select()
-  .eq('tierlist_ID', 4)
+  .eq('topic_ID', topicID)
 
   if (error) {
     throw new Error(error)
@@ -51,11 +51,11 @@ export async function downloadTest() {
   }
 }
 
-export async function fetchTopicTierlists(topicID) {
+export async function fetchTierlist(tierlistID) {
   const { data, error } = await supabase
-  .from('tierlists')
+  .from('tierlist_items')
   .select()
-  .eq('topic_ID', topicID)
+  .eq('tierlist_ID', tierlistID)
 
   if (error) {
     throw new Error(error)
