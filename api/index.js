@@ -36,7 +36,6 @@ app.get('/testDownload', async (req, res) => {
 
 app.get('/fetchTopicTierlists/:id', async (req, res) => {
   try {
-    console.log(req.params.id)
     const data = await fetchTopicTierlists(req.params.id)
     res.status(200).json(data)
   } catch (error) {
