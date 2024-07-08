@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors'
-import { sendEmail, uploadEmail, fetchTopic } from './functions.js';
+import { sendEmail, uploadEmail, fetchTopic, fetchTierlist } from './functions.js';
 
 
 const app = express()
