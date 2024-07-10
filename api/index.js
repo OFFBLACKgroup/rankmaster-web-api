@@ -6,7 +6,7 @@ import { sendEmail, uploadEmail, fetchTopic, fetchTierlist } from './functions.j
 const app = express()
 
 app.use(express.json())
-app.use(cors({ origin: ['http://localhost:4200', 'https://www.rankmaster.click/'] }))
+app.use(cors({ origin: ['http://localhost:4200', 'https://www.rankmaster.click'] }))
 
 app.get('', (req, res) => {
   res.send('Welcome to the RankMaster API!')
