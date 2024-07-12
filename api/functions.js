@@ -109,7 +109,7 @@ export async function getUserData() {
   .eq('user_id', id)
 
   if (error) {
-    throw new Error('Something went wrong while fetching comleted tier lists', id) 
+    throw new Error(`${id} Something went wrong while fetching completed tier lists`) 
   } else {
     return data
   }
