@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors'
-import { sendEmail, uploadEmail, fetchTopic, fetchTierlist } from './functions.js';
+import { sendEmail, uploadEmail, fetchTopic, fetchTierlist, signUp } from './functions.js';
 
 
 const app = express()
@@ -37,6 +37,16 @@ app.get('/fetchTopic/:id', async (req, res) => {
 app.get('/fetchTierlist/:id', async (req, res) => {
   try {
     const data = await fetchTierlist(req.params.id)
+    res.status(200).json(data)
+  } catch (error) {
+    console.log(error)
+    res.status(404).send()
+  }
+})
+
+app.post('/signUp', async (req, res) => {
+  try {
+    const data = await signUp(req.body.email, req.body.password)
     res.status(200).json(data)
   } catch (error) {
     console.log(error)
