@@ -103,6 +103,8 @@ async function getUserId() {
 export async function getUserData() {
   const id = await getUserId()
 
+  console.log(id)
+
   const { data, error } = await supabase
   .from('comleted_tierlist_logs')
   .select()
