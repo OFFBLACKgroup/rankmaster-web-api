@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors'
-import { sendEmail, uploadEmail, fetchTopic, fetchTierlist, signUp, signIn, testGet } from './functions.js';
+import { sendEmail, uploadEmail, fetchTopic, fetchTierlist, signUp, signIn, getUserData } from './functions.js';
 
 
 const app = express()
@@ -64,9 +64,9 @@ app.post('/signIn', async (req, res) => {
   }
 })
 
-app.get('/testGet', async (req, res) => {
+app.get('/userData', async (req, res) => {
   try {
-    const data = await testGet()
+    const data = await getUserData()
     res.status(200).json(data)
   } catch (error) {
     console.log(error)
