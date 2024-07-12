@@ -91,7 +91,7 @@ export async function signIn(email, password) {
 }
 
 export async function testGet() {
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data } = await supabase.auth.getUser()
 
   if (data) {
     return data
