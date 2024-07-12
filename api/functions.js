@@ -103,15 +103,13 @@ async function getUserId() {
 export async function getUserData() {
   const id = await getUserId()
 
-  console.log(id)
-
   const { data, error } = await supabase
   .from('comleted_tierlist_logs')
   .select()
   .eq('user_id', id)
 
   if (error) {
-    throw new Error('Something went wrong while fetching comleted tier lists') 
+    throw new Error('Something went wrong while fetching comleted tier lists', id) 
   } else {
     return data
   }
