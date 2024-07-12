@@ -54,6 +54,16 @@ app.post('/signUp', async (req, res) => {
   }
 })
 
+app.post('/signIn', async (req, res) => {
+  try {
+    const data = await signIn(req.body.email, req.body.password)
+    res.status(200).json(data)
+  } catch (error) {
+    console.log(error)
+    res.status(404).send()
+  }
+})
+
 const port = 3000;
 
 app.listen(port, () => {
