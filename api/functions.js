@@ -94,19 +94,19 @@ async function getUserId() {
   const { data: { user } } = await supabase.auth.getUser()
 
   if (data) {
-    return data.user.id
+    return data
   } else {
     throw new Error('Could not get current user')
   }
 }
 
 export async function getUserData() {
-  const id = await getUserId()
+  const userObject = await getUserId()
 
   const { data, error } = await supabase
   .from('comleted_tierlist_logs')
   .select()
-  .eq('user_id', id)
+  .eq('user_id', userObject.user.id)
 
   if (error) {
     throw new Error('Something went wrong while fetching comleted tier lists') 
