@@ -89,3 +89,13 @@ export async function signIn(email, password) {
     return data
   }
 }
+
+export async function testGet() {
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (data) {
+    return data
+  } else {
+    throw new Error('Something went wrong')
+  }
+}
