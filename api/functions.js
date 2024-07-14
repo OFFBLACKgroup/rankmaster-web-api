@@ -114,3 +114,17 @@ export async function getUserData() {
     return { data, role }
   }
 }
+
+export async function upgradeUserToPremiumTest() {
+  const { id, role } = await getUserIdAndRole()
+
+  let { data, error } = await supabase
+    .rpc('Upgrade user to Premium', {
+      id
+    })
+  if (error) {
+    throw new Error('Upgrading user to Premium unsuccessful!')
+  } else {
+    return
+  }
+} 

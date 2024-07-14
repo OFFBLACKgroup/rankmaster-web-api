@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors'
-import { sendEmail, uploadEmail, fetchTopic, fetchTierlist, signUp, signIn, getUserData } from './functions.js';
+import { sendEmail, uploadEmail, fetchTopic, fetchTierlist, signUp, signIn, getUserData, upgradeUserToPremiumTest } from './functions.js';
 
 
 const app = express()
@@ -68,6 +68,16 @@ app.get('/userData', async (req, res) => {
   try {
     const data = await getUserData()
     res.status(200).json(data)
+  } catch (error) {
+    console.log(error)
+    res.status(404).send()
+  }
+})
+
+app.get('/updateToPremiumTest', async (req, res) => {
+  try {
+    await upgradeUserToPremiumTest()
+    res.status(200).send()
   } catch (error) {
     console.log(error)
     res.status(404).send()
