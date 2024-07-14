@@ -90,18 +90,18 @@ export async function signIn(email, password) {
   }
 }
 
-async function getUserId() {
+async function getUserIdAndRole() {
   const { data: { user } } = await supabase.auth.getUser()
 
   if (user) {
-    return user.id
+    return { id: user.id, role: user.isPremium }
   } else {
     throw new Error('Could not get current user')
   }
 }
 
 export async function getUserData() {
-  const id = await getUserId()
+  const { id, role } = await getUserIdAndRole()
 
   const { data, error } = await supabase
   .from('completed_tierlist_logs')
@@ -111,6 +111,6 @@ export async function getUserData() {
   if (error) {
     throw new Error(`Something went wrong while fetching completed tier lists`) 
   } else {
-    return data
+    return { data, role }
   }
 }
