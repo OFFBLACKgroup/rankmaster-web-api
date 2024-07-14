@@ -90,28 +90,23 @@ export async function signIn(email, password) {
   }
 }
 
-async function getUserIdAndRole() {
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (user) {
-    return { id: user.id, role: user.isPremium }
-  } else {
-    throw new Error('Could not get current user')
-  }
-}
-
 export async function getUserData() {
-  const { id, role } = await getUserIdAndRole()
+  const id = (await supabase.auth.getUser()).data.user.id
 
-  const { data, error } = await supabase
+  const { data, error1 } = await supabase
   .from('completed_tierlist_logs')
   .select()
   .eq('user_id', id)
 
-  if (error) {
-    throw new Error(`Something went wrong while fetching completed tier lists`, error) 
+  const { isPremium, error2 } = await supabase
+  .from('profiles')
+  .select('is_premium')
+  .eq('id', id)
+
+  if ( error1 || error2 ) {
+    throw new Error(`Something went wrong while fetching completed tier lists: ${error1 || error2}`) 
   } else {
-    return { data, role }
+    return { data, isPremium }
   }
 }
 
