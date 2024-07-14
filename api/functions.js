@@ -109,7 +109,7 @@ export async function getUserData() {
   .eq('user_id', id)
 
   if (error) {
-    throw new Error(`Something went wrong while fetching completed tier lists`) 
+    throw new Error(`Something went wrong while fetching completed tier lists`, error) 
   } else {
     return { data, role }
   }
@@ -123,7 +123,7 @@ export async function upgradeUserToPremiumTest() {
       user_id: id
     })
   if (error) {
-    throw new Error('Upgrading user to Premium unsuccessful!', error)
+    throw new Error(error)
   } else {
     return
   }
