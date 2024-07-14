@@ -116,11 +116,11 @@ export async function getUserData() {
 }
 
 export async function upgradeUserToPremiumTest() {
-  const { id, role } = await getUserIdAndRole()
+  const { id: user_id, role } = await getUserIdAndRole()
 
   let { data, error } = await supabase
     .rpc('Upgrade user to Premium', {
-      user_id: id
+      user_id
     })
   if (error) {
     throw new Error(error)
