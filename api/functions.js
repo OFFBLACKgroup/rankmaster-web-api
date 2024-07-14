@@ -98,7 +98,7 @@ export async function getUserData() {
   .select()
   .eq('user_id', id)
 
-  const { isPremium, error2 } = await supabase
+  const { data: isPremium, error2 } = await supabase
   .from('profiles')
   .select()
 
