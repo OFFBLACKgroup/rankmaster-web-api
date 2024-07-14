@@ -122,8 +122,9 @@ export async function upgradeUserToPremiumTest() {
     .rpc('Upgrade user to Premium', {
       user_id
     })
+
   if (error) {
-    throw new Error(error)
+    throw new Error(JSON.stringify(error))
   } else {
     return
   }
