@@ -120,7 +120,7 @@ export async function upgradeUserToPremiumTest() {
 
   let { data, error } = await supabase
     .rpc('Upgrade user to Premium', {
-      id
+      user_id: id
     })
   if (error) {
     throw new Error('Upgrading user to Premium unsuccessful!')
