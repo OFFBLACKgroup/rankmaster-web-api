@@ -102,7 +102,6 @@ export async function getUserData() {
   .from('profiles')
   .select('is_premium')
   .eq('id', id)
-  .single()
 
   if ( error1 || error2 ) {
     throw new Error(`Something went wrong while fetching completed tier lists: ${error1 || error2}`) 
