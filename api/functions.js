@@ -123,7 +123,7 @@ export async function upgradeUserToPremiumTest() {
       user_id: id
     })
   if (error) {
-    throw new Error('Upgrading user to Premium unsuccessful!')
+    throw new Error('Upgrading user to Premium unsuccessful!', error)
   } else {
     return
   }
