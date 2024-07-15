@@ -98,6 +98,8 @@ app.post('/upgradeToPremium', async (req, res) => {
 
   if (event.type == 'payment_intent.succeeded') {
     console.log('Payment successful')
+  } else {
+    console.log('At least something happened')
   }
 
   res.json({received: true});
