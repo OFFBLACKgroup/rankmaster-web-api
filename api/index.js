@@ -1,8 +1,9 @@
 import express from 'express';
 import cors from 'cors'
+import Stripe from 'stripe'
 import { sendEmail, uploadEmail, fetchTopic, fetchTierlist, signUp, signIn, getUserData, upgradeUserToPremiumTest } from './functions.js';
 
-
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const app = express()
 
 app.use(express.json())
@@ -82,6 +83,24 @@ app.get('/updateToPremiumTest', async (req, res) => {
     console.log(error)
     res.status(404).send()
   }
+})
+
+app.post('/upgradeToPremium', async (req, res) => {
+  const sig = request.headers['stripe-signature'];
+
+  let event
+  try {
+    event = stripe.webhooks.constructEvent(request.body, sig, process.env.STRIPE_ENDPOINT_SECRET);
+  }
+  catch (err) {
+    response.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  if (event.type == 'payment_intent.succeeded') {
+    console.log('Payment successful')
+  }
+
+  res.json({received: true});
 })
 
 const port = 3000;
