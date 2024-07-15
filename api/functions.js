@@ -2,6 +2,7 @@ import FormData from 'form-data';
 import fetch from 'node-fetch';
 import 'dotenv/config'
 import { createClient } from '@supabase/supabase-js'
+import Stripe from 'stripe';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
 
@@ -124,4 +125,29 @@ export async function upgradeUserToPremiumTest() {
   } else {
     return
   }
-} 
+}
+
+export async function upgradeToPremium(req) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+  const supabaseAdmin = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ADMIN_KEY
+  )
+
+  const sig = req.headers['stripe-signature'];
+
+  const event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_ENDPOINT_SECRET);
+
+  if (event.type == 'checkout.session.completed') {
+    const userID = event.data.object.client_reference_id
+
+    const { data, error } = await supabaseAdmin
+    .from('profiles')
+    .update({ is_premium: true })
+    .eq('id', userID)
+    .select()
+
+    if (error) throw error;
+  }
+}

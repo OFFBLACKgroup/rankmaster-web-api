@@ -1,13 +1,22 @@
 import express from 'express';
 import cors from 'cors'
-import Stripe from 'stripe'
-import { sendEmail, uploadEmail, fetchTopic, fetchTierlist, signUp, signIn, getUserData, upgradeUserToPremiumTest } from './functions.js';
+import { sendEmail, uploadEmail, fetchTopic, fetchTierlist, signUp, signIn, getUserData, upgradeToPremium } from './functions.js';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const app = express()
+app.use(cors({ origin: ['http://localhost:4200', 'https://www.rankmaster.click'] }))
+
+app.post('/upgradeToPremium', express.raw({type: 'application/json'}), async (req, res) => {
+  try {
+    await upgradeToPremium(req)
+    console.log('Successfully upgraded user to premium!')
+    res.send()
+  } catch (error) {
+    console.log(error)
+    res.status(404).send(`Webhook Error: ${err.message}`)
+  }
+})
 
 app.use(express.json())
-app.use(cors({ origin: ['http://localhost:4200', 'https://www.rankmaster.click'] }))
 
 app.get('', (req, res) => {
   res.send('Welcome to the RankMaster API!')
@@ -73,36 +82,6 @@ app.get('/userData', async (req, res) => {
     console.log(error)
     res.status(404).send()
   }
-})
-
-app.get('/updateToPremiumTest', async (req, res) => {
-  try {
-    await upgradeUserToPremiumTest()
-    res.status(200).send()
-  } catch (error) {
-    console.log(error)
-    res.status(404).send()
-  }
-})
-
-app.post('/upgradeToPremium', async (req, res) => {
-  const sig = req.headers['stripe-signature'];
-
-  let event
-  try {
-    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_ENDPOINT_SECRET);
-  }
-  catch (err) {
-    response.status(400).send(`Webhook Error: ${err.message}`);
-  }
-
-  if (event.type == 'payment_intent.succeeded') {
-    console.log('Payment successful')
-  } else {
-    console.log('At least something happened')
-  }
-
-  res.json({received: true});
 })
 
 const port = 3000;
