@@ -39,6 +39,22 @@ export async function uploadEmail(email) {
   }
 }
 
+export async function fetchMenu() {
+  const { data, error } = await supabase
+  .from('topics')
+  .select(`
+    *,
+    tierlists:tierlists(count)
+  `)
+  .order('id');
+
+  if (error) {
+    throw error
+  } else {
+    return data
+  }
+}
+
 export async function fetchTopic(topicID) {
   const { data, error } = await supabase
   .from('tierlists')
