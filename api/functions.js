@@ -58,7 +58,10 @@ export async function fetchMenu() {
 export async function fetchTopic(topicID) {
   const { data, error } = await supabase
   .from('tierlists')
-  .select()
+  .select(`
+    *,
+    tierlist_items:tierlist_items(count)
+  `)
   .eq('topic_ID', topicID)
 
   if (error) {
@@ -166,4 +169,8 @@ export async function upgradeToPremium(req) {
 
     if (error) throw error;
   }
+}
+
+export async function getUserID() {
+  return (await supabase.auth.getUser()).data.user.id
 }

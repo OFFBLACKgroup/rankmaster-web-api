@@ -47,7 +47,7 @@ app.get('/fetchMenu', async (req, res) => {
 app.get('/fetchTopic/:id', async (req, res) => {
   try {
     const data = await fetchTopic(req.params.id)
-    res.status(200).json(data)
+    res.json(data)
   } catch (error) {
     console.log(error)
     res.status(404).send()
@@ -57,7 +57,7 @@ app.get('/fetchTopic/:id', async (req, res) => {
 app.get('/fetchTierlist/:id', async (req, res) => {
   try {
     const data = await fetchTierlist(req.params.id)
-    res.status(200).json(data)
+    res.json(data)
   } catch (error) {
     console.log(error)
     res.status(404).send()
@@ -67,7 +67,7 @@ app.get('/fetchTierlist/:id', async (req, res) => {
 app.post('/signUp', async (req, res) => {
   try {
     const data = await signUp(req.body.email, req.body.password)
-    res.status(200).json(data)
+    res.json(data)
   } catch (error) {
     console.log(error)
     res.status(404).send()
@@ -77,7 +77,7 @@ app.post('/signUp', async (req, res) => {
 app.post('/signIn', async (req, res) => {
   try {
     const data = await signIn(req.body.email, req.body.password)
-    res.status(200).json(data)
+    res.json(data)
   } catch (error) {
     console.log(error)
     res.status(404).send()
@@ -87,7 +87,17 @@ app.post('/signIn', async (req, res) => {
 app.get('/userData', async (req, res) => {
   try {
     const data = await getUserData()
-    res.status(200).json(data)
+    res.json(data)
+  } catch (error) {
+    console.log(error)
+    res.status(404).send()
+  }
+})
+
+app.get('/currentUserID', async (req, res) => {
+  try {
+    const data = await getUserID()
+    res.json(data)
   } catch (error) {
     console.log(error)
     res.status(404).send()
