@@ -223,7 +223,7 @@ export async function calculatePoints(request) {
     throw error
   }
 
-  const points = 0
+  let points = 0
   const maxPoint = request.predictions.length <= 5 ? 2 : request.predictions.length <= 8 ? 3 : 4 
 
 
