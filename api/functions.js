@@ -174,3 +174,83 @@ export async function upgradeToPremium(req) {
 export async function getUserID() {
   return (await supabase.auth.getUser()).data.user.id
 }
+
+async function createUserLog(topicID, tierlistID, collectedPoints) {
+  const userID = await getUserID()
+  if (!userID) {
+    throw new Error('No user id')
+  }
+
+  const { data, error } = await supabase
+  .from('completed_tierlist_logs')
+  .insert([
+    { user_id: userID, tierlist_ID: tierlistID, collected_points: collectedPoints, topic_ID: topicID },
+  ])
+  .select()
+
+  if (error) {
+    throw error
+  }     
+}
+
+async function updateResult(predictions, data) {
+  const options = []
+  for (const [index, prediction] of predictions.entries()) {
+    options.push({
+      id: prediction.id,
+      num_of_votes: data[index].num_of_votes + 1,
+      average_rank: (data[index].average_rank * data[index].num_of_votes + prediction.predicted_tier) / (data[index].num_of_votes + 1)
+    })
+  }
+
+  const { data, error } = await supabase
+  .from('tierlist_items')
+  .upsert(options)
+
+  if (error) {
+    throw error
+  }
+}
+
+export async function calculatePoints(request) {
+  const { data, error } = await supabase
+  .from('tierlist_items')
+  .select()
+  .eq('tierlist_ID', request.tierlistID)
+  .order('id')
+
+  if (error) {
+    throw error
+  }
+
+  const points = 0
+  const maxPoint = request.predicitons.length <= 5 ? 2 : request.predicitons.length <= 8 ? 3 : 4 
+
+
+  request.predictions.forEach((item, index) => {
+    points += Math.min( 0, Math.abs( maxPoint - (item.prediction - data[index].average_rank) ) )
+  })
+    
+  await createUserLog(request.topicID, request.tierlistID, points)
+  await updateResult(request.predicitons, data)
+
+  return points
+}
+
+/* 
+  {
+    topicID
+    tierlistID,
+    predictions
+    [
+      {
+        tierlist_item_id
+        predicted_tier
+      },
+      {
+        tierlist_item_id
+        predicted_tier
+      },
+    ]
+  }
+*/
