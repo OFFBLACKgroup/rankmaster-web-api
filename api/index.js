@@ -106,7 +106,7 @@ app.get('/currentUserID', async (req, res) => {
 
 app.post('/points', async (req, res) => {
   try {
-    const points = await calculatePoints(req)
+    const points = await calculatePoints(req.body)
     res.json(points)
   } catch (error) {
     console.log(error)
