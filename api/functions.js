@@ -193,13 +193,13 @@ async function createUserLog(topicID, tierlistID, collectedPoints) {
   }     
 }
 
-async function updateResult(predictions, data) {
+async function updateResult(predictions, tierlistItems) {
   const options = []
   for (const [index, prediction] of predictions.entries()) {
     options.push({
       id: prediction.id,
-      num_of_votes: data[index].num_of_votes + 1,
-      average_rank: (data[index].average_rank * data[index].num_of_votes + prediction.predicted_tier) / (data[index].num_of_votes + 1)
+      num_of_votes: tierlistItems[index].num_of_votes + 1,
+      average_rank: (tierlistItems[index].average_rank * tierlistItems[index].num_of_votes + prediction.predicted_tier) / (tierlistItems[index].num_of_votes + 1)
     })
   }
 
@@ -236,21 +236,3 @@ export async function calculatePoints(request) {
 
   return points
 }
-
-/* 
-  {
-    topicID
-    tierlistID,
-    predictions
-    [
-      {
-        tierlist_item_id
-        predicted_tier
-      },
-      {
-        tierlist_item_id
-        predicted_tier
-      },
-    ]
-  }
-*/
