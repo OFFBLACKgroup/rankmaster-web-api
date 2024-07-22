@@ -224,7 +224,7 @@ export async function calculatePoints(request) {
   }
 
   const points = 0
-  const maxPoint = request.predicitons.length <= 5 ? 2 : request.predicitons.length <= 8 ? 3 : 4 
+  const maxPoint = request.predictions.length <= 5 ? 2 : request.predictions.length <= 8 ? 3 : 4 
 
 
   request.predictions.forEach((item, index) => {
@@ -232,7 +232,7 @@ export async function calculatePoints(request) {
   })
     
   await createUserLog(request.topicID, request.tierlistID, points)
-  await updateResult(request.predicitons, data)
+  await updateResult(request.predictions, data)
 
   return points
 }
