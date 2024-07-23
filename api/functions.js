@@ -197,11 +197,12 @@ async function updateResult(predictions, tierlistItems) {
   const options = []
   for (const [index, prediction] of predictions.entries()) {
     options.push({
-      id: prediction.id,
+      id: prediction.tierlist_item_id,
       num_of_votes: tierlistItems[index].num_of_votes + 1,
       average_rank: (tierlistItems[index].average_rank * tierlistItems[index].num_of_votes + prediction.predicted_tier) / (tierlistItems[index].num_of_votes + 1)
     })
   }
+  console.log(options)
 
   const { data, error } = await supabase
   .from('tierlist_items')
@@ -229,7 +230,7 @@ export async function calculatePoints(request) {
 
 
   request.predictions.forEach((item, index) => {
-    points += Math.min( 0, Math.abs( maxPoint - (item.prediction - data[index].average_rank) ) )
+    points += Math.min( 0, Math.abs( maxPoint - (item.predicted_tier - Math.round(data[index].average_rank)) ) )
   })
     
   await createUserLog(request.topicID, request.tierlistID, points)
