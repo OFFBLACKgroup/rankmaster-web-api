@@ -205,7 +205,7 @@ async function updateResult(predictions, tierlistItems) {
 
   const { data, error } = await supabase
   .from('tierlist_items')
-  .upsert(options, { onConflict: 'handle' })
+  .upsert(options)
   .select()
 
   if (error) {
