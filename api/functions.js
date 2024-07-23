@@ -230,7 +230,7 @@ export async function calculatePoints(request) {
 
 
   request.predictions.forEach((item, index) => {
-    points += Math.min( 0, Math.abs( maxPoint - (item.predicted_tier - Math.round(data[index].average_rank)) ) )
+    points += Math.max( 0, Math.abs( maxPoint - (item.predicted_tier - Math.round(data[index].average_rank)) ) )
   })
     
   await createUserLog(request.topicID, request.tierlistID, points)
