@@ -248,8 +248,8 @@ export async function fetchDailyTierlist() {
   const { data, error } = await supabase
     .from('tierlists')
     .select('*')
-    .not('daily_added_date', 'is', null)
-    // .eq("date_trunc('day', event_date)::date", currentDateString)
+    // .not('daily_added_date', 'is', null)
+    .eq("date_trunc('day', event_date)::date", currentDateString)
 
   if (error) {
     throw error
