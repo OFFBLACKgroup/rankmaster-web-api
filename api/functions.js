@@ -242,14 +242,12 @@ export async function calculatePoints(request) {
 }
 
 export async function fetchDailyTierlist() {
-  const now = new Date();
-  const currentDateString = now.toISOString().split('T')[0]
+  const todaysDate = new Date().toISOString().slice(0,10) // Formats: YYYY-MM-DD
 
   const { data, error } = await supabase
     .from('tierlists')
     .select('*')
-    // .not('daily_added_date', 'is', null)
-    .eq("date_trunc('day', event_date)::date", currentDateString)
+    .eq('daily_added_date', todaysDate)
 
   if (error) {
     throw error
