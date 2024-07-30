@@ -226,15 +226,33 @@ export async function calculatePoints(request) {
   }
 
   let points = 0
-  const maxPoint = request.predictions.length <= 5 ? 2 : request.predictions.length <= 8 ? 3 : 4 
+  const maxPointPerItem = request.predictions.length <= 5 ? 2 : request.predictions.length <= 8 ? 3 : 4 
 
 
   request.predictions.forEach((item, index) => {
-    points += Math.max( 0, Math.abs( maxPoint - (item.predicted_tier - Math.round(data[index].average_rank)) ) )
+    const pointsForItem = Math.max( 0, Math.abs( maxPointPerItem - (item.predicted_tier - Math.round(data[index].average_rank)) ) )
+    points += pointsForItem
+    predictions[index].points_for_item = pointsForItem
   })
     
   await createUserLog(request.topicID, request.tierlistID, points)
   await updateResult(request.predictions, data)
 
   return points
+}
+
+export async function fetchDailyTierlist() {
+  const now = new Date();
+  const currentDateString = now.toISOString().split('T')[0]
+
+  const { data, error } = await supabase
+    .from('tierlists')
+    .select('*')
+    .not('daily_added_date', 'is', null)
+    // .eq("date_trunc('day', event_date)::date", currentDateString)
+
+  if (error) {
+    throw error
+  }
+  return data
 }
