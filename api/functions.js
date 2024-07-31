@@ -228,9 +228,11 @@ export async function calculatePoints(request) {
   let points = 0
   const maxPointPerItem = request.predictions.length <= 5 ? 2 : request.predictions.length <= 8 ? 3 : 4 
 
-
   request.predictions.forEach((item, index) => {
-    const pointsForItem = Math.max( 0, Math.abs( maxPointPerItem - (item.predicted_tier - Math.round(data[index].average_rank)) ) )
+    //calculate absolute distance
+    const distance = Math.abs( item.predicted_tier - Math.round(data[index].average_rank) )
+    //substitute from maxPoint BUT minimum 0
+    const pointsForItem = Math.max( 0, maxPointPerItem - distance)
     points += pointsForItem
     request.predictions[index].points_for_item = pointsForItem
   })
