@@ -235,10 +235,10 @@ export async function calculatePoints(request) {
     predictions[index].points_for_item = pointsForItem
   })
     
-  await createUserLog(request.topicID, request.tierlistID, points)
-  await updateResult(request.predictions, data)
+  // await createUserLog(request.topicID, request.tierlistID, points)
+  // await updateResult(request.predictions, data)
 
-  return points
+  return { points, predictions }
 }
 
 export async function fetchDailyTierlist() {
