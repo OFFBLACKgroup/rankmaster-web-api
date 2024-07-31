@@ -235,6 +235,7 @@ export async function calculatePoints(request) {
     const pointsForItem = Math.max( 0, maxPointPerItem - distance)
     points += pointsForItem
     request.predictions[index].points_for_item = pointsForItem
+    request.predicted_tier[index].correct_tier = Math.round(data[index].average_rank)
   })
     
   // await createUserLog(request.topicID, request.tierlistID, points)
