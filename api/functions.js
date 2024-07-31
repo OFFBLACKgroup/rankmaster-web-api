@@ -247,6 +247,8 @@ export async function calculatePoints(request) {
 export async function fetchDailyTierlist() {
   const todaysDate = new Date().toISOString().slice(0,10) // Formats: YYYY-MM-DD
 
+  console.log('Date:', todaysDate)
+
   const { data, error } = await supabase
     .from('tierlists')
     .select('*')
@@ -255,5 +257,6 @@ export async function fetchDailyTierlist() {
   if (error) {
     throw error
   }
+  console.log('Data:', data)
   return data
 }
