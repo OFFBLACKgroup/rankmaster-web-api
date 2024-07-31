@@ -232,13 +232,13 @@ export async function calculatePoints(request) {
   request.predictions.forEach((item, index) => {
     const pointsForItem = Math.max( 0, Math.abs( maxPointPerItem - (item.predicted_tier - Math.round(data[index].average_rank)) ) )
     points += pointsForItem
-    predictions[index].points_for_item = pointsForItem
+    request.predictions[index].points_for_item = pointsForItem
   })
     
   // await createUserLog(request.topicID, request.tierlistID, points)
   // await updateResult(request.predictions, data)
 
-  return { points, predictions }
+  return { points, predictions: request.predictions }
 }
 
 export async function fetchDailyTierlist() {
