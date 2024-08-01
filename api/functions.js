@@ -262,7 +262,7 @@ export async function fetchDailyTierlist() {
 export async function getRandomTierlist() {
   const userID = (await supabase.auth.getUser()).data.user.id
 
-  const { data: isPremium, error } = await supabase
+  const { data: user_data, error } = await supabase
   .from('profiles')
   .select('is_premium')
   .eq('id', userID)
@@ -270,7 +270,7 @@ export async function getRandomTierlist() {
 
   if (error) throw error
 
-  if (isPremium) {
+  if (user_data.isPremium == true) {
     const { data, error } = await supabase
     .from('tierlists')
     .select('id, topic_ID')
