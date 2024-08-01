@@ -295,7 +295,7 @@ export async function getRandomTierlist() {
     if (error) throw error
 
     const index = Math.round(Math.random() * (Math.abs(data.length - 1)) )
-    return {  id: data[index].id, topic_ID: data[index].topic_ID, name: data[index].name }
+    return {  id: data.id, topic_ID: data.topic_ID, name: data.name }
 
   } else {
     const { data, error } = await supabase
@@ -308,6 +308,6 @@ export async function getRandomTierlist() {
     if (error) throw error
 
     const index = Math.round(Math.random() * (Math.abs(data.length - 1)) )
-    return {  id: data[index].id, topic_ID: data[index].topic_ID, name: data[index].name }
+    return {  id: data.id, topic_ID: data.topic_ID, name: data.name }
   }
 }
