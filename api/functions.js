@@ -113,12 +113,12 @@ export async function signIn(email, password) {
 export async function getUserData() {
   const id = (await supabase.auth.getUser()).data.user.id
 
-  const { data, error1 } = await supabase
+  const { data, error: error1 } = await supabase
   .from('completed_tierlist_logs')
   .select()
   .eq('user_id', id)
 
-  const { data: isPremium, error2 } = await supabase
+  const { data: isPremium, error: error2 } = await supabase
   .from('profiles')
   .select('is_premium')
   .eq('id', id)
@@ -256,4 +256,47 @@ export async function fetchDailyTierlist() {
     throw error
   }
   return data
+}
+
+export async function getRandomTierlist() {
+  const userID = (await supabase.auth.getUser()).data.user.id
+
+  const { data: isPremium, error } = await supabase
+  .from('profiles')
+  .select('is_premium')
+  .eq('id', id)
+  .single()
+
+  let tierlistID = null
+
+  if (isPremium) {
+    const { data, error } = await supabase
+    .from('tierlists')
+    .select('id, topic_ID')
+    .order('id', { ascending: false })
+    .limit(1)
+
+    if (error) throw error
+
+    tierlistID = Math.round(Math.random() * data[0].id)
+
+    const { data: randomTierlist, error: error2 } = await supabase
+    .from('tierlists')
+    .select('id, topic_ID')
+    .eq('id', tierlistID)
+    
+    if (error2) throw error2
+    return randomTierlist
+
+  } else {
+    const { data, error } = await supabase
+    .from('tierlists')
+    .select('id', 'topic_ID')
+    .eq('is_premium', false)
+
+    if (error) throw error
+
+    const index = Math.round(Math.random() * (Math.abs(data.length - 1)) )
+    return {  id: data[index].id, topic_ID: data[index].id }
+  }
 }
