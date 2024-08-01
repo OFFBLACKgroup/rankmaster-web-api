@@ -271,47 +271,43 @@ export async function getRandomTierlist() {
 
   if (error) throw error
 
+  //Generate list of completed tier lists
+  const { data: completedTierlists, error: completedError } = await supabase
+  .from('completed_tierlist_logs')
+  .select('tierlist_ID')
+  .eq('user_id', userID)
+
+  if (completedError) throw completedError
+
+  const completedIdsArray = completedTierlists.map(item => item.tierlist_ID)
+  const completedIds = `(${completedIdsArray.join(',')})`
+  const todaysDate = new Date().toISOString().slice(0,10)
+
+  //OPTIMIZABLE reusing code as it does mainly the same
+  //Return random list based on if premium user
   if (user_data.isPremium == true) {
     const { data, error } = await supabase
     .from('tierlists')
-    .select('id, topic_ID')
-    .order('id', { ascending: false })
-    .limit(1)
+    .select('id, topic_ID, name')
+    .not('id', 'in', completedIds)
+    .neq('daily_added_date', todaysDate)
 
     if (error) throw error
 
-    const tierlistID = Math.round(Math.random() * data[0].id)
-
-    const { data: randomTierlist, error: error2 } = await supabase
-    .from('tierlists')
-    .select('id, topic_ID, name')
-    .eq('id', tierlistID)
-    
-    if (error2) throw error2
-    return randomTierlist
+    const index = Math.round(Math.random() * (Math.abs(data.length - 1)) )
+    return {  id: data[index].id, topic_ID: data[index].topic_ID, name: data[index].name }
 
   } else {
-    const { data: completedTierlists, error: completedError } = await supabase
-    .from('completed_tierlist_logs')
-    .select('tierlist_ID')
-    .eq('user_id', userID);
-  
-    if (completedError) throw completedError
-
-    const completedIdsArray = completedTierlists.map(item => item.tierlist_ID);
-    const completedIds = `(${completedIdsArray.join(',')})`;
-
-  // Step 2: Fetch tierlists excluding the completed ones
     const { data, error } = await supabase
       .from('tierlists')
       .select('id, topic_ID, name')
       .eq('is_premium', false)
-      .not('id', 'in', completedIds);
+      .not('id', 'in', completedIds)
+      .neq('daily_added_date', todaysDate)
 
     if (error) throw error
 
-    // const index = Math.round(Math.random() * (Math.abs(data.length - 1)) )
-    // return {  id: data[index].id, topic_ID: data[index].topic_ID, name: data[index].name }
-    return data
+    const index = Math.round(Math.random() * (Math.abs(data.length - 1)) )
+    return {  id: data[index].id, topic_ID: data[index].topic_ID, name: data[index].name }
   }
 }
