@@ -126,8 +126,18 @@ app.get('/dailyTierlist', async (req, res) => {
 
 app.get('/randomTierlist', async (req, res) => {
   try {
-    const randomTierlist = await getRandomTierlist()
-    res.json(randomTierlist)
+    // const randomTierlist = await getRandomTierlist()
+    const { data, error } = await supabase
+    .from('tierlists')
+    .select('id, topic_ID, name')
+    .eq('is_premium', false)
+    .not('id', 'in', supabase
+      .from('completed_tierlist_logs')
+      .select('tierlist_ID')
+      .eq('user_id', userID)
+    )
+    if (error) throw error
+    res.json(data)
   } catch (error) {
     console.log(error)
     res.status(404).send()

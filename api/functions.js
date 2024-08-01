@@ -259,6 +259,7 @@ export async function fetchDailyTierlist() {
   return data
 }
 
+//TODO exclude completed tier lists from returning as random
 export async function getRandomTierlist() {
   const userID = (await supabase.auth.getUser()).data.user.id
 
@@ -294,6 +295,11 @@ export async function getRandomTierlist() {
     .from('tierlists')
     .select('id, topic_ID, name')
     .eq('is_premium', false)
+    .not('id', 'in', supabase
+      .from('completed_tierlist_logs')
+      .select('tierlist_ID')
+      .eq('user_id', userID)
+    )
 
     if (error) throw error
 
