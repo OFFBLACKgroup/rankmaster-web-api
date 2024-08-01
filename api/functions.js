@@ -291,15 +291,22 @@ export async function getRandomTierlist() {
     return randomTierlist
 
   } else {
+    const { data: completedTierlists, error: completedError } = await supabase
+    .from('completed_tierlist_logs')
+    .select('tierlist_ID')
+    .eq('user_id', userID);
+  
+    if (completedError) throw completedError
+
+    const completedIdsArray = completedTierlists.map(item => item.tierlist_ID);
+    const completedIds = `(${completedIdsArray.join(',')})`;
+
+  // Step 2: Fetch tierlists excluding the completed ones
     const { data, error } = await supabase
-    .from('tierlists')
-    .select('id, topic_ID, name')
-    .eq('is_premium', false)
-    .not('id', 'in', supabase
-      .from('completed_tierlist_logs')
-      .select('tierlist_ID')
-      .eq('user_id', userID)
-    )
+      .from('tierlists')
+      .select('id, topic_ID, name')
+      .eq('is_premium', false)
+      .not('id', 'in', completedIds);
 
     if (error) throw error
 
