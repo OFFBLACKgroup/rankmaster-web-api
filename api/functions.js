@@ -264,7 +264,7 @@ export async function getRandomTierlist() {
   const { data: isPremium, error } = await supabase
   .from('profiles')
   .select('is_premium')
-  .eq('id', id)
+  .eq('id', userID)
   .single()
 
   let tierlistID = null
