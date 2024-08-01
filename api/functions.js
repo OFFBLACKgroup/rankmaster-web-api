@@ -283,7 +283,7 @@ export async function getRandomTierlist() {
 
     const { data: randomTierlist, error: error2 } = await supabase
     .from('tierlists')
-    .select('id, topic_ID')
+    .select('id, topic_ID', 'name')
     .eq('id', tierlistID)
     
     if (error2) throw error2
@@ -292,12 +292,12 @@ export async function getRandomTierlist() {
   } else {
     const { data, error } = await supabase
     .from('tierlists')
-    .select('id, topic_ID')
+    .select('id, topic_ID', 'name')
     .eq('is_premium', false)
 
     if (error) throw error
 
     const index = Math.round(Math.random() * (Math.abs(data.length - 1)) )
-    return {  id: data[index].id, topic_ID: data[index].topic_ID }
+    return {  id: data[index].id, topic_ID: data[index].topic_ID, name: data[index].name }
   }
 }
