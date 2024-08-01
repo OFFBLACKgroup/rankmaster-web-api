@@ -303,7 +303,7 @@ export async function getRandomTierlist() {
       .select('id, topic_ID, name')
       .eq('is_premium', false)
       .not('id', 'in', completedIds)
-      .neq('daily_added_date', todaysDate)
+      // .neq('daily_added_date', todaysDate)
 
     if (error) throw error
 
