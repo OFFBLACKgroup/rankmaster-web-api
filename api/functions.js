@@ -302,8 +302,8 @@ export async function getRandomTierlist() {
       .from('tierlists')
       .select('id, topic_ID, name')
       .eq('is_premium', false)
-      .neq('daily_added_date', todaysDate)
       .not('id', 'in', completedIds)
+      .not('daily_added_date', 'eq', todaysDate)
 
     if (error) throw error
 
