@@ -71,6 +71,7 @@ export async function fetchTopic(topicID) {
   }
 }
 
+//OPTIMIZABLE turn all single return queries into using .single() so no need for res[0]
 export async function fetchTierlist(tierlistID) {
   const { data, error } = await supabase
   .from('tierlist_items')
@@ -78,7 +79,7 @@ export async function fetchTierlist(tierlistID) {
   .eq('tierlist_ID', tierlistID)
 
   if (error) {
-    throw new Error(error)
+    throw error
   } else {
     return data
   }
@@ -267,7 +268,7 @@ export async function getRandomTierlist() {
   .eq('id', userID)
   .single()
 
-  let tierlistID = null
+  if (error) throw error
 
   if (isPremium) {
     const { data, error } = await supabase
@@ -278,7 +279,7 @@ export async function getRandomTierlist() {
 
     if (error) throw error
 
-    tierlistID = Math.round(Math.random() * data[0].id)
+    const tierlistID = Math.round(Math.random() * data[0].id)
 
     const { data: randomTierlist, error: error2 } = await supabase
     .from('tierlists')
@@ -291,7 +292,7 @@ export async function getRandomTierlist() {
   } else {
     const { data, error } = await supabase
     .from('tierlists')
-    .select('id', 'topic_ID')
+    .select('id, topic_ID')
     .eq('is_premium', false)
 
     if (error) throw error
