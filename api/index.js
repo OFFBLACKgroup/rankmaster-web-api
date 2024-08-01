@@ -127,6 +127,8 @@ app.get('/dailyTierlist', async (req, res) => {
 app.get('/randomTierlist', async (req, res) => {
   try {
     // const randomTierlist = await getRandomTierlist()
+    const userID = (await supabase.auth.getUser()).data.user.id
+
     const { data, error } = await supabase
     .from('tierlists')
     .select('id, topic_ID, name')
