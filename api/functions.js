@@ -301,8 +301,7 @@ export async function getRandomTierlist() {
     const { data, error } = await supabase
       .from('tierlists')
       .select('id, topic_ID, name')
-      .not('daily_added_date', 'eq', todaysDate)
-      .or('daily_added_date', 'is', null)
+      .or('daily_added_date.neq.' + todaysDate + ',daily_added_date.is.null')
       // .eq('is_premium', false)
       // .not('id', 'in', completedIds)
 
