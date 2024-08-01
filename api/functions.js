@@ -298,6 +298,6 @@ export async function getRandomTierlist() {
     if (error) throw error
 
     const index = Math.round(Math.random() * (Math.abs(data.length - 1)) )
-    return {  id: data[index].id, topic_ID: data[index].id }
+    return {  id: data[index].id, topic_ID: data[index].topic_ID }
   }
 }
