@@ -239,8 +239,8 @@ export async function calculatePoints(request) {
     request.predictions[index].correct_tier = Math.round(data[index].average_rank)
   })
     
-  // await createUserLog(request.topicID, request.tierlistID, points)
-  // await updateResult(request.predictions, data)
+  await createUserLog(request.topicID, request.tierlistID, points)
+  await updateResult(request.predictions, data)
 
   return { points, predictions: request.predictions }
 }
