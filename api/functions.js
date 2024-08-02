@@ -312,3 +312,10 @@ export async function getRandomTierlist() {
     return {  id: data[index].id, topic_ID: data[index].topic_ID, name: data[index].name }
   }
 }
+
+export async function signInAnonymous() {
+  const { data, error } = await supabase.auth.signInAnonymously()
+
+  if (error) { throw error }
+  else return data
+}
