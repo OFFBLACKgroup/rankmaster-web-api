@@ -265,15 +265,17 @@ export async function getRandomTierlist() {
   const userID = response.data.user.id
 
   const completedIds = ''
+  const user_data = null
 
   if (!response.data.user.is_anonymous) {
-    const { data: user_data, error } = await supabase
+    const { data, error } = await supabase
     .from('profiles')
     .select('is_premium')
     .eq('id', userID)
     .single()
   
     if (error) throw error
+    user_data = data
   
     //Generate list of completed tier lists
     const { data: completedTierlists, error: completedError } = await supabase
