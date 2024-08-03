@@ -191,7 +191,7 @@ async function createUserLog(completedTierlists) {
   .select()
 
   if (error) {
-    throw new Error('Went wrong here. Completed_tierlist_logs: ' + completedTierlists + 'Error: ' + error)
+    throw new Error('Went wrong here. Completed_tierlist_logs: ' + JSON.stringify(completedTierlists) + 'Error: ' + JSON.stringify(error))
   } else return 
 }
 
