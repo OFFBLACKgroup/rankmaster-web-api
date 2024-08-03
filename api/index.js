@@ -76,8 +76,8 @@ app.post('/signUp', async (req, res) => {
 
 app.post('/signIn', async (req, res) => {
   try {
-    const data = await signIn(req.body.email, req.body.password, req.body.anon)
-    res.json(data)
+    await signIn(req.body.email, req.body.password, req.body.anon)
+    res.send()
   } catch (error) {
     console.log(error)
     res.status(404).send()

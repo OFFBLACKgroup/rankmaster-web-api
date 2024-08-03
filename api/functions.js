@@ -187,9 +187,7 @@ async function createUserLog(completedTierlists) {
 
   const { data, error } = await supabase
   .from('completed_tierlist_logs')
-  .insert([
-    { tierlist_ID: 20, collected_points: 3, topic_ID: 3 }
-  ])
+  .insert(completedTierlists)
   .select()
 
   if (error) {
