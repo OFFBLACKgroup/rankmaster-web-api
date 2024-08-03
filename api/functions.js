@@ -85,7 +85,7 @@ export async function fetchTierlist(tierlistID) {
   }
 }
 
-export async function signUp(email, password) {
+export async function signUp(email, password, anon) {
   const { data, error } = await supabase.auth.signUp({
     email: email,
     password: password,
@@ -99,20 +99,34 @@ export async function signUp(email, password) {
   .select()
 
   if (profileError) { throw profileError }
+
+  if (anon.fromAnon && anon.data.length != 0) {
+    await createUserLog(anon.data)
+  }
+
   return data
 }
 
-export async function signIn(email, password) {
+export async function signIn(email, password, anon) {
+  //OPTIMIZABLE probably signup returns user object too, same for signUP
   const { data, error } = await supabase.auth.signInWithPassword({
     email: email,
     password: password,
   })
 
-  if (error) {
-    throw new Error(error)
-  } else {
-    return data
+  if (error) { throw error }
+  if (anon.fromAnon && anon.data.length != 0) {
+    const user = await supabase.auth.getUser()
+    const { data: logs, error } = await supabase
+    .from('completed_tierlist_logs')
+    .select('tierlist_ID')
+    .eq('user_id', user.data.user.id)
+
+    if (error) { throw error }
+    anon.data.filter((newlyCompleted) => !logs.some((log) => log.tierlist_ID == newlyCompleted.tierlist_ID))
+    await createUserLog(anon.data)
   }
+  return data
 }
 
 export async function getUserData() {
@@ -133,21 +147,6 @@ export async function getUserData() {
     throw new Error(`Something went wrong while fetching completed tier lists: ${error1 || error2}`) 
   } else {
     return { data, isPremium }
-  }
-}
-
-export async function upgradeUserToPremiumTest() {
-  const { id: user_id, role } = await getUserIdAndRole()
-
-  let { data, error } = await supabase
-    .rpc('upgrade_user_to_premium', {
-      user_id
-    })
-
-  if (error) {
-    throw new Error(JSON.stringify(error))
-  } else {
-    return
   }
 }
 
@@ -180,17 +179,17 @@ export async function getUserID() {
   return (await supabase.auth.getUser()).data.user.id
 }
 
-async function createUserLog(topicID, tierlistID, collectedPoints) {
+async function createUserLog(completedTierlists) {
   const userID = await getUserID()
   if (!userID) {
     throw new Error('No user id')
   }
 
+  completedTierlists = completedTierlists.map((tierlist) => tierlist.user_id = userID)
+
   const { data, error } = await supabase
   .from('completed_tierlist_logs')
-  .insert([
-    { user_id: userID, tierlist_ID: tierlistID, collected_points: collectedPoints, topic_ID: topicID },
-  ])
+  .insert(completedTierlists)
   .select()
 
   if (error) {
@@ -198,6 +197,7 @@ async function createUserLog(topicID, tierlistID, collectedPoints) {
   }     
 }
 
+//BUG kind of a feature, but if anon user does a playlist that he already completed, it counts again into global results
 async function updateResult(predictions, tierlistItems) {
   const options = []
   for (const [index, prediction] of predictions.entries()) {
@@ -243,7 +243,10 @@ export async function calculatePoints(request) {
     request.predictions[index].correct_tier = Math.round(data[index].average_rank)
   })
     
-  // await createUserLog(request.topicID, request.tierlistID, points)
+  const user = await supabase.auth.getUser()
+  if (!user.data.user.is_anonymous) {
+    // await createUserLog([{topic_ID: request.topicID, tierlist_ID: request.tierlistID, collected_points: points}])
+  }
   // await updateResult(request.predictions, data)
 
   return { points, predictions: request.predictions }
