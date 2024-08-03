@@ -261,26 +261,32 @@ export async function fetchDailyTierlist() {
 
 //TODO exclude completed tier lists from returning as random
 export async function getRandomTierlist() {
-  const userID = (await supabase.auth.getUser()).data.user.id
+  const response = await supabase.auth.getUser()
+  const userID = response.data.user.id
 
-  const { data: user_data, error } = await supabase
-  .from('profiles')
-  .select('is_premium')
-  .eq('id', userID)
-  .single()
+  const completedIds = ''
 
-  if (error) throw error
+  if (!response.data.user.is_anonymous) {
+    const { data: user_data, error } = await supabase
+    .from('profiles')
+    .select('is_premium')
+    .eq('id', userID)
+    .single()
+  
+    if (error) throw error
+  
+    //Generate list of completed tier lists
+    const { data: completedTierlists, error: completedError } = await supabase
+    .from('completed_tierlist_logs')
+    .select('tierlist_ID')
+    .eq('user_id', userID)
+  
+    if (completedError) throw completedError
+  
+    const completedIdsArray = completedTierlists.map(item => item.tierlist_ID)
+    completedIds = `(${completedIdsArray.join(',')})`
+  }
 
-  //Generate list of completed tier lists
-  const { data: completedTierlists, error: completedError } = await supabase
-  .from('completed_tierlist_logs')
-  .select('tierlist_ID')
-  .eq('user_id', userID)
-
-  if (completedError) throw completedError
-
-  const completedIdsArray = completedTierlists.map(item => item.tierlist_ID)
-  const completedIds = `(${completedIdsArray.join(',')})`
   const todaysDate = new Date().toISOString().slice(0,10)
 
   //OPTIMIZABLE reusing code as it does mainly the same
