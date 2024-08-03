@@ -265,7 +265,7 @@ export async function getRandomTierlist() {
   const userID = response.data.user.id
 
   const completedIds = ''
-  const user_data = null
+  const user_data = { isPremium: false }
 
   if (!response.data.user.is_anonymous) {
     const { data, error } = await supabase
