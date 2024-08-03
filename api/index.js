@@ -66,7 +66,7 @@ app.get('/fetchTierlist/:id', async (req, res) => {
 
 app.post('/signUp', async (req, res) => {
   try {
-    const data = await signUp(req.body.email, req.body.password)
+    const data = await signUp(req.body.email, req.body.password, res.anon)
     res.json(data)
   } catch (error) {
     console.log(error)
