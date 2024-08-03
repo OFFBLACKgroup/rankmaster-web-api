@@ -123,8 +123,8 @@ export async function signIn(email, password, anon) {
     .eq('user_id', user.data.user.id)
 
     if (error) { throw new Error(`This is where we are failing: ${error}`) }
-    anon.data.filter((newlyCompleted) => !logs.some((log) => log.tierlist_ID == newlyCompleted.tierlist_ID))
-    await createUserLog(anon.data)
+    const nonDuplicateTierlists = anon.data.filter((newlyCompleted) => !logs.some((log) => log.tierlist_ID == newlyCompleted.tierlist_ID))
+    await createUserLog(nonDuplicateTierlists)
   }
   return data
 }
@@ -184,8 +184,6 @@ async function createUserLog(completedTierlists) {
   if (!userID) {
     throw new Error('No user id')
   }
-
-  completedTierlists = completedTierlists.map((tierlist) => tierlist.user_id = userID)
 
   const { data, error } = await supabase
   .from('completed_tierlist_logs')
