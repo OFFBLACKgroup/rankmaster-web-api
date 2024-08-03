@@ -193,8 +193,8 @@ async function createUserLog(completedTierlists) {
   .select()
 
   if (error) {
-    throw error
-  }     
+    throw new Error('Went wrong here')
+  } else return 
 }
 
 //BUG kind of a feature, but if anon user does a playlist that he already completed, it counts again into global results
