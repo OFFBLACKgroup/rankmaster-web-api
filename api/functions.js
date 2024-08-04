@@ -340,7 +340,7 @@ export async function createSSE(req, res) {
   const subscription = supabase
     .channel('leaderboard')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'leaderboard' }, (payload) => {
-      session.push("Hello world!")
+      session.push(`data: ${JSON.stringify(payload)}\n\n`)
     })
     .subscribe();
 
@@ -348,5 +348,4 @@ export async function createSSE(req, res) {
       subscription.unsubscribe();
       session.end();
     });
-
 }
