@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 import 'dotenv/config'
 import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe';
-import {createSession} from "better-sse";
+import { createSession } from 'better-sse'
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
 
