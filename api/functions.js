@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 import 'dotenv/config'
 import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe';
+import {createSession} from "better-sse";
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
 
@@ -331,4 +332,21 @@ export async function signInAnonymous() {
 
   if (error) { throw error }
   else return data
+}
+
+export async function createSSE(req, res) {
+  const session = await createSession(req, res);
+
+  const subscription = supabase
+    .channel('leaderboard')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'leaderboard' }, (payload) => {
+      session.push("Hello world!")
+    })
+    .subscribe();
+
+    req.on('close', () => {
+      subscription.unsubscribe();
+      session.end();
+    });
+
 }

@@ -144,6 +144,16 @@ app.get('/signInAnonymous', async (req, res) => {
   }
 })
 
+app.get('/leaderboard', (req, res) => {
+  try {
+    createSSE(req, res)
+  } catch (error) {
+    console.log(error)
+    res.status(404).send()
+  }
+  
+});
+
 const port = 3000;
 
 app.listen(port, () => {
