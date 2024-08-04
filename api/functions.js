@@ -335,7 +335,7 @@ export async function signInAnonymous() {
 }
 
 export async function createSSE(req, res) {
-  const session = await berrerSse.createSeccion(req, res)
+  const session = await betterSse.createSeccion(req, res)
 
   const subscription = supabase
     .channel('leaderboard')
