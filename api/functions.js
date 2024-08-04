@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 import 'dotenv/config'
 import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe';
-import { createSession } from 'better-sse'
+import betterSse from 'better-sse'
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
 
@@ -335,7 +335,7 @@ export async function signInAnonymous() {
 }
 
 export async function createSSE(req, res) {
-  const session = await createSession(req, res);
+  const session = await berrerSse.createSeccion(req, res)
 
   const subscription = supabase
     .channel('leaderboard')
