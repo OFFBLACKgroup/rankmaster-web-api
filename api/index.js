@@ -147,6 +147,10 @@ app.get('/signInAnonymous', async (req, res) => {
 
 app.get('/leaderboard', async (req, res) => {
   try {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
     const session = await betterSSE.createSession(req, res)
 
     req.on('close', () => {
