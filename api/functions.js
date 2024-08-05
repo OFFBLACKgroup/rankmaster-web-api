@@ -1,9 +1,9 @@
-import FormData from 'form-data';
-import fetch from 'node-fetch';
+import FormData from 'form-data'
+import fetch from 'node-fetch'
 import 'dotenv/config'
 import { createClient } from '@supabase/supabase-js'
-import Stripe from 'stripe';
-import betterSse from 'better-sse'
+import Stripe from 'stripe'
+import Ably from 'ably'
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
 
@@ -334,15 +334,8 @@ export async function signInAnonymous() {
   else return data
 }
 
-export async function handleSupabaseUpdates(session) {
-  const subscription = supabase
-    .channel('public:leaderboard')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'leaderboard' }, (payload) => {
-      session.push(JSON.stringify(payload))
-    })
-    .subscribe();
-
-    session.on('close', () => {
-      subscription.unsubscribe()
-    });
+export async function createToken() {
+  const client = new Ably.Rest({ key: process.env.ABLY_ADMIN_KEY })
+  const tokenRequest = await client.auth.createTokenRequest({ clientId: '*' })
+  return tokenRequest
 }
