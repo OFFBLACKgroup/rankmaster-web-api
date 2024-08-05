@@ -338,7 +338,7 @@ export async function handleSupabaseUpdates(session) {
   const subscription = supabase
     .channel('public:leaderboard')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'leaderboard' }, (payload) => {
-      session.push(`data: ${JSON.stringify(payload)}\n\n`)
+      session.push(JSON.stringify(payload))
     })
     .subscribe();
 
