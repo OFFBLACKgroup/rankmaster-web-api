@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors'
-import { sendEmail, uploadEmail, fetchTopic, fetchTierlist, signUp, signIn, getUserData, upgradeToPremium, fetchMenu, getUserID, calculatePoints, fetchDailyTierlist, getRandomTierlist, signInAnonymous, createSSE } from './functions.js';
+import { createSession } from 'better-sse';
+import { sendEmail, uploadEmail, fetchTopic, fetchTierlist, signUp, signIn, getUserData, upgradeToPremium, fetchMenu, getUserID, calculatePoints, fetchDailyTierlist, getRandomTierlist, signInAnonymous, handleSupabaseUpdates } from './functions.js';
 
 const app = express()
 app.use(cors({ origin: ['http://localhost:4200', 'https://www.rankmaster.click'] }))
@@ -146,7 +147,16 @@ app.get('/signInAnonymous', async (req, res) => {
 
 app.get('/leaderboard', async (req, res) => {
   try {
-    await createSSE(req, res)
+    const session = await createSession(req, res)
+
+    req.on('close', () => {
+        session.close()
+    })
+
+    session.push("Connection established!")
+
+    handleSupabaseUpdates(session)
+
   } catch (error) {
     console.log(error)
     res.status(404).send()

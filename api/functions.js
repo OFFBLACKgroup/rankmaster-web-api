@@ -334,29 +334,15 @@ export async function signInAnonymous() {
   else return data
 }
 
-export async function createSSE(req, res) {
-  res.setHeader('Content-Type', 'text/event-stream')
-  res.setHeader('Cache-Control', 'no-cache')
-  res.setHeader('Connection', 'keep-alive')
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200')
-  res.flushHeaders()
+export async function handleSupabaseUpdates(session) {
+  const subscription = supabase
+    .channel('public:leaderboard')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'leaderboard' }, (payload) => {
+      session.push(`data: ${JSON.stringify(payload)}\n\n`)
+    })
+    .subscribe();
 
-  const encoder = new TextEncoder()
-  const stream = new ReadableStream({
-    start(controller) {
-      const subscription = supabase
-        .channel('leaderboard')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'leaderboard' }, (payload) => {
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify(payload)}\n\n`));
-        })
-        .subscribe()
-
-      req.on('close', () => {
-        subscription.unsubscribe()
-        controller.close()
-      });
-    }
-  });
-
-  new Response(stream).body.pipeTo(res)
+    session.on('close', () => {
+      subscription.unsubscribe()
+    });
 }
