@@ -335,7 +335,7 @@ export async function signInAnonymous() {
 }
 
 export async function createToken() {
-  const client = new Ably.Rest({ key: process.env.ABLY_ADMIN_KEY })
+  const client = new Ably.Rest({ key: process.env.ABLY_ADMIN_KEY, authUrl: 'https://www.api.rankmaster.click/leaderboard' })
   const tokenRequest = await client.auth.createTokenRequest({ clientId: '*' })
   return tokenRequest
 }
