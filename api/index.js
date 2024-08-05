@@ -147,7 +147,6 @@ app.get('/signInAnonymous', async (req, res) => {
 app.get('/leaderboard', async (req, res) => {
   try {
     const token = await createToken()
-    console.log(token)
     res.json(token)
   } catch (error) {
     console.log(error)

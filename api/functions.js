@@ -336,6 +336,6 @@ export async function signInAnonymous() {
 
 export async function createToken() {
   const client = new Ably.Rest({ key: process.env.ABLY_ADMIN_KEY })
-  const tokenRequest = await client.auth.createTokenRequest({ clientId: '*' })
+  const tokenRequest = await client.auth.createTokenRequest()
   return tokenRequest
 }
