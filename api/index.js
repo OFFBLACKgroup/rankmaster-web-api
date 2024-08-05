@@ -146,13 +146,6 @@ app.get('/signInAnonymous', async (req, res) => {
 })
 
 app.get('/leaderboard', async (req, res) => {
-  res.writeHead(200, {
-    'Content-Type': 'text/event-stream',
-    'Cache-Control': 'no-cache',
-    'Connection': 'keep-alive',
-    'Access-Control-Allow-Origin': 'http://localhost:4200'
-  })
-
   try {
     const session = await betterSSE.createSession(req, res)
 
@@ -168,7 +161,7 @@ app.get('/leaderboard', async (req, res) => {
     console.log(error)
     res.status(404).send()
   }
-});
+})
 
 const port = 3000;
 
