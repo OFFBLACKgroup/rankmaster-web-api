@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors'
-import { createSession } from 'better-sse';
+import  betterSSE from 'better-sse';
 import { sendEmail, uploadEmail, fetchTopic, fetchTierlist, signUp, signIn, getUserData, upgradeToPremium, fetchMenu, getUserID, calculatePoints, fetchDailyTierlist, getRandomTierlist, signInAnonymous, handleSupabaseUpdates } from './functions.js';
 
 const app = express()
@@ -147,7 +147,7 @@ app.get('/signInAnonymous', async (req, res) => {
 
 app.get('/leaderboard', async (req, res) => {
   try {
-    const session = await createSession(req, res)
+    const session = await betterSSE.createSession(req, res)
 
     req.on('close', () => {
         session.close()
