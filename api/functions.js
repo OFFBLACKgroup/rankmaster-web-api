@@ -362,5 +362,5 @@ export async function updateUser(userData) {
   .select()
 
   if (error2) throw error2
-  return "OK"
+  return { message: "OK" }
 }
