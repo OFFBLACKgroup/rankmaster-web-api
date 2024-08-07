@@ -342,23 +342,24 @@ export async function createToken() {
 
 export async function updateUser(userData) {
   const userID = await getUserID()
-  const updateData = { username: userData.username }
+  const updatedData = { username: userData.username }
   
   if (userData.user_icon_ID) {
-    updateData.user_icon_ID = userData.user_icon_ID
+    updatedData.user_icon_ID = userData.user_icon_ID
   }
 
   const { data, error } = await supabase
     .from('profiles')
-    .update(updateData)
+    .update(updatedData)
     .eq('id', userID)
 
   if (error) throw error
 
   const { data: data2, error: error2 } = await supabase
   .from('leaderboard')
-  .upsert(updateData)
+  .upsert([updatedData])
   .eq('id', userID)
+  .select()
 
   if (error2) throw error2
   return "OK"
