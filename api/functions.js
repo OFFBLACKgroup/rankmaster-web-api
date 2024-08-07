@@ -339,3 +339,20 @@ export async function createToken() {
   const tokenRequest = await client.auth.createTokenRequest({ clientId: 'BOB', ttl: 900000, capability: { 'leaderboard': ['subscribe'] }})
   return tokenRequest
 }
+
+export async function updateUser(userData) {
+  const userID = await getUserID()
+  const updateData = { username: userData.username }
+  
+  if (userData.user_icon_ID) {
+    updateData.user_icon_ID = userData.user_icon_ID
+  }
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .update(updateData)
+    .eq('id', userID)
+
+  if (error) throw error
+  return data
+}

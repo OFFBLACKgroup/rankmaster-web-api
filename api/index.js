@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors'
-import { sendEmail, uploadEmail, fetchTopic, fetchTierlist, signUp, signIn, getUserData, upgradeToPremium, fetchMenu, getUserID, calculatePoints, fetchDailyTierlist, getRandomTierlist, signInAnonymous, createToken } from './functions.js';
+import { sendEmail, uploadEmail, fetchTopic, fetchTierlist, signUp, signIn, getUserData, upgradeToPremium, fetchMenu, getUserID, calculatePoints, fetchDailyTierlist, getRandomTierlist, signInAnonymous, createToken, updateUser } from './functions.js';
 
 const app = express()
 app.use(cors({ origin: ['http://localhost:4200', 'https://www.rankmaster.click'] }))
@@ -148,6 +148,16 @@ app.get('/leaderboard', async (req, res) => {
   try {
     const token = await createToken()
     res.json(token)
+  } catch (error) {
+    console.log(error)
+    res.status(404).send()
+  }
+})
+
+app.post('/updateUser', async (req, res) => {
+  try {
+    await updateUser(req.body)
+    res.send()
   } catch (error) {
     console.log(error)
     res.status(404).send()
