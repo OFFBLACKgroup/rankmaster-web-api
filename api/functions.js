@@ -358,8 +358,8 @@ export async function updateUser(userData) {
   const { data: data2, error: error2 } = await supabase
   .from('leaderboard')
   .upsert({ id: userID, username: userData.username, user_icon_ID: userData.user_icon_ID })
-  .eq('user_id', userID)
+  .eq('id', userID)
 
-  if (error2) throw new Error(`Error: ${error2}, user_id: ${userID}, username: ${userData.username}, user_icon_ID: ${userData.user_icon_ID}`)
+  if (error2) throw error2
   return "OK"
 }
