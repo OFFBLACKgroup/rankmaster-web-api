@@ -140,7 +140,7 @@ export async function getUserData() {
 
   const { data: userData, error: error2 } = await supabase
   .from('profiles')
-  .select('is_premium', 'username', 'user_icon_ID')
+  .select('is_premium, username, user_icon_ID')
   .eq('id', id)
   .single()
 
