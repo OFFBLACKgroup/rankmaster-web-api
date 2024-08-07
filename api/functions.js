@@ -354,5 +354,12 @@ export async function updateUser(userData) {
     .eq('id', userID)
 
   if (error) throw error
+
+  const { data: data2, error: error2 } = await supabase
+  .from('leaderboard')
+  .update(userData)
+  .eq('user_id', userID)
+
+  if (error2) throw error2
   return "OK"
 }
