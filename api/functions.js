@@ -138,16 +138,16 @@ export async function getUserData() {
   .select()
   .eq('user_id', id)
 
-  const { data: isPremium, error: error2 } = await supabase
+  const { data: userData, error: error2 } = await supabase
   .from('profiles')
-  .select('is_premium')
+  .select('is_premium', 'username', 'user_icon_ID')
   .eq('id', id)
   .single()
 
   if ( error1 || error2 ) {
     throw new Error(`Something went wrong while fetching completed tier lists: ${error1 || error2}`) 
   } else {
-    return { data, isPremium }
+    return { completedTierlists: data, userData: userData }
   }
 }
 
