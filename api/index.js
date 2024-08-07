@@ -156,8 +156,8 @@ app.get('/leaderboard', async (req, res) => {
 
 app.post('/updateUser', async (req, res) => {
   try {
-    await updateUser(req.body)
-    res.send()
+    const data = await updateUser(req.body)
+    res.send(data)
   } catch (error) {
     console.log(error)
     res.status(404).send()

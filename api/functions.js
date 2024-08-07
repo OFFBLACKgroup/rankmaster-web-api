@@ -354,5 +354,5 @@ export async function updateUser(userData) {
     .eq('id', userID)
 
   if (error) throw error
-  return data
+  return "OK"
 }
