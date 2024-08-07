@@ -360,6 +360,6 @@ export async function updateUser(userData) {
   .upsert({ id: userID, username: userData.username, user_icon_ID: userData.user_icon_ID })
   .eq('user_id', userID)
 
-  if (error2) throw error2
+  if (error2) throw new Error(`Error: ${error2}, user_id: ${userID}, username: ${userData.username}, user_icon_ID: ${userData.user_icon_ID}`)
   return "OK"
 }
