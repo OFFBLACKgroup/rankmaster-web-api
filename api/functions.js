@@ -364,3 +364,15 @@ export async function updateUser(userData) {
   if (error2) throw error2
   return { message: "OK" }
 }
+
+export async function updateUserIcon(userData) {
+  const userID = await getUserID()
+  const { data, error } = await supabase
+  .from('profiles')
+  .update({ user_icon_ID: userData.user_icon_ID })
+  .eq('id', userID)
+  .select()
+
+  if (error) throw error
+  return { message: "OK" }
+}
