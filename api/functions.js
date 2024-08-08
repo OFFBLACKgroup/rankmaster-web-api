@@ -374,5 +374,13 @@ export async function updateUserIcon(userData) {
   .select()
 
   if (error) throw error
+
+  const { data: data2, error: error2 } = await supabase
+  .from('leaderboard')
+  .upsert([{ id: userID, user_icon_ID: userData.user_icon_ID }])
+  .eq('id', userID)
+  .select()
+
+  if (error2) throw error2
   return { message: "OK" }
 }
