@@ -137,20 +137,25 @@ export async function getUserData() {
   .from('completed_tierlist_logs')
   .select()
   .eq('user_id', id)
+  if (error1) { throw error1 }
 
   const { data: userData, error: error2 } = await supabase
   .from('profiles')
   .select('is_premium, username, user_icon_ID')
   .eq('id', id)
   .single()
+  if (error2) { throw error2 }
 
-
-  if ( error1 || error2 ) {
-    throw new Error(`Something went wrong while fetching completed tier lists: ${error1 || error2}`) 
-  } else {
-    const isDailyComplete = data.some(item => item.is_daily && item.daily_added_date == new Date().toISOString().slice(0,10))
-    return { completedTierlists: data, userData: userData, isDailyComplete: isDailyComplete }
-  }
+  const { data: dailyTierlist, error: error3 } = await supabase
+  .from('tierlists')
+  .select('id')
+  .eq('is_daily', true)
+  .eq('daily_added_date', new Date().toISOString().slice(0,10))
+  .single()
+  if (error3) { throw error3 }
+  
+  const isDailyComplete = data.some(item => item.tierlist_ID == dailyTierlist.id)
+  return { completedTierlists: data, userData: userData, isDailyComplete: isDailyComplete }
 }
 
 export async function upgradeToPremium(req) {
