@@ -378,3 +378,25 @@ export async function updateUserIcon(userData) {
   if (error2) throw error2
   return { message: "OK" }
 }
+
+export async function updateLeaderboard(points) {
+  const userID = await getUserID()
+
+  const { data, error } = await supabase
+  .from('leaderboard')
+  .select('total_points')
+  .eq('id', userID)
+
+  if (error) throw error
+
+  const totalPoints = data[0].total_points + points
+
+  const { data: data2, error: error2 } = await supabase
+  .from('leaderboard')
+  .upsert([{ id: userID, total_points: totalPoints }])
+  .eq('id', userID)
+  .select()
+
+  if (error2) throw error2
+  return { message: "OK" }
+}
