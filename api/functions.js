@@ -246,12 +246,33 @@ export async function calculatePoints(request) {
   })
     
   const user = await supabase.auth.getUser()
+  const todaysDate = new Date().toISOString().slice(0, 10) // Formats: YYYY-MM-DD
+
+  const { data: completedToday, error: completedTodayError } = await supabase
+    .from('completed_tierlist_logs')
+    .select('collected_points')
+    .eq('created_at', todaysDate)
+    .eq('tierlist_ID', request.tierlistID)
+
+  let topPercentile = 0
+  if (completedTodayError) { throw completedTodayError }
+  if (completedToday.length > 0) {
+    for (const item of completedToday) {
+      if (item.collected_points > points) {
+        topPercentile++
+      }
+    }
+    topPercentile = Math.round((1 - topPercentile / completedToday.length) * 100)
+  } else {
+    topPercentile = 99
+  }
+
   if (!user.data.user.is_anonymous) {
     // await createUserLog([{topic_ID: request.topicID, tierlist_ID: request.tierlistID, collected_points: points}])
   }
   // await updateResult(request.predictions, data)
 
-  return { points, predictions: request.predictions }
+  return { points, predictions: request.predictions, placement }
 }
 
 export async function fetchDailyTierlist() {
