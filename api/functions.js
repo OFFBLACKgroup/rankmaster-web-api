@@ -282,9 +282,9 @@ export async function calculatePoints(request) {
   }
 
   if (!user.data.user.is_anonymous) {
-    // await createUserLog([{topic_ID: request.topicID, tierlist_ID: request.tierlistID, collected_points: points}])
+    await createUserLog([{topic_ID: request.topicID, tierlist_ID: request.tierlistID, collected_points: points}])
   }
-  // await updateResult(request.predictions, data)
+  await updateResult(request.predictions, data)
 
   return { points, predictions: request.predictions, topPercentile }
 }
@@ -303,7 +303,6 @@ export async function fetchDailyTierlist() {
   return data
 }
 
-//TODO exclude completed tier lists from returning as random
 export async function getRandomTierlist() {
   const response = await supabase.auth.getUser()
   const userID = response.data.user.id
