@@ -144,10 +144,12 @@ export async function getUserData() {
   .eq('id', id)
   .single()
 
+
   if ( error1 || error2 ) {
     throw new Error(`Something went wrong while fetching completed tier lists: ${error1 || error2}`) 
   } else {
-    return { completedTierlists: data, userData: userData }
+    const isDailyComplete = data.some(item => item.is_daily && item.daily_added_date == new Date().toISOString().slice(0,10))
+    return { completedTierlists: data, userData: userData, isDailyComplete: isDailyComplete }
   }
 }
 
