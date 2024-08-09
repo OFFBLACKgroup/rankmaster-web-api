@@ -221,6 +221,20 @@ async function updateResult(predictions, tierlistItems) {
   }
 }
 
+async function calculatePercentile(completedToday) {
+  let topPercentile = 0
+  if (completedToday.length > 0) {
+    for (const item of completedToday) {
+      if (item.collected_points > points) {
+        topPercentile++
+      }
+    }
+    topPercentile = Math.round((1 - topPercentile / completedToday.length) * 100)
+  } else {
+    topPercentile = 99
+  }
+}
+
 export async function calculatePoints(request) {
   const { data, error } = await supabase
   .from('tierlist_items')
@@ -248,31 +262,22 @@ export async function calculatePoints(request) {
   const user = await supabase.auth.getUser()
   const todaysDate = new Date().toISOString().slice(0, 10) // Formats: YYYY-MM-DD
 
-  let completedToday, completedTodayError;
+  let topPercentile = 0
   if (request.isDailyTierlist) {
-    ({ data: completedToday, error: completedTodayError } = await supabase
+    const { data: completedToday, error: completedTodayError } = await supabase
       .from('completed_tierlist_logs')
       .select('collected_points')
       .eq('created_at', todaysDate)
-      .eq('tierlist_ID', request.tierlistID))
+      .eq('tierlist_ID', request.tierlistID)
+    if (completedTodayError) { throw completedTodayError }
+    topPercentile = await calculatePercentile(completedToday)
   } else {
-    ({ data: completedToday, error: completedTodayError } = await supabase
+    const { data: completedToday, error: completedTodayError } = await supabase
       .from('completed_tierlist_logs')
       .select('collected_points')
-      .eq('tierlist_ID', request.tierlistID))
-  }
-
-  let topPercentile = 0
-  if (completedTodayError) { throw completedTodayError }
-  if (completedToday.length > 0) {
-    for (const item of completedToday) {
-      if (item.collected_points > points) {
-        topPercentile++
-      }
-    }
-    topPercentile = Math.round((1 - topPercentile / completedToday.length) * 100)
-  } else {
-    topPercentile = 99
+      .eq('tierlist_ID', request.tierlistID)
+    if (completedTodayError) { throw completedTodayError }
+    topPercentile = await calculatePercentile(completedToday)
   }
 
   if (!user.data.user.is_anonymous) {
