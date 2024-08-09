@@ -270,14 +270,14 @@ export async function calculatePoints(request) {
       .eq('created_at', todaysDate)
       .eq('tierlist_ID', request.tierlistID)
     if (completedTodayError) { throw completedTodayError }
-    topPercentile = await calculatePercentile(completedToday)
+    topPercentile = await calculatePercentile(completedToday, points)
   } else {
     const { data: completedToday, error: completedTodayError } = await supabase
       .from('completed_tierlist_logs')
       .select('collected_points')
       .eq('tierlist_ID', request.tierlistID)
     if (completedTodayError) { throw completedTodayError }
-    topPercentile = await calculatePercentile(completedToday)
+    topPercentile = await calculatePercentile(completedToday, points)
   }
 
   if (!user.data.user.is_anonymous) {
