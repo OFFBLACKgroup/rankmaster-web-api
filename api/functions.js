@@ -229,9 +229,9 @@ async function calculatePercentile(completedToday) {
         topPercentile++
       }
     }
-    topPercentile = Math.round((1 - topPercentile / completedToday.length) * 100)
+    return topPercentile = Math.round((1 - topPercentile / completedToday.length) * 100)
   } else {
-    topPercentile = 99
+    return 99
   }
 }
 
