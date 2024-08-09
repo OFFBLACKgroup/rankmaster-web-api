@@ -248,11 +248,19 @@ export async function calculatePoints(request) {
   const user = await supabase.auth.getUser()
   const todaysDate = new Date().toISOString().slice(0, 10) // Formats: YYYY-MM-DD
 
-  const { data: completedToday, error: completedTodayError } = await supabase
-    .from('completed_tierlist_logs')
-    .select('collected_points')
-    .eq('created_at', todaysDate)
-    .eq('tierlist_ID', request.tierlistID)
+  let completedToday, completedTodayError;
+  if (request.isDialyTierlist) {
+    ({ data: completedToday, error: completedTodayError } = await supabase
+      .from('completed_tierlist_logs')
+      .select('collected_points')
+      .eq('created_at', todaysDate)
+      .eq('tierlist_ID', request.tierlistID))
+  } else {
+    ({ data: completedToday, error: completedTodayError } = await supabase
+      .from('completed_tierlist_logs')
+      .select('collected_points')
+      .eq('tierlist_ID', request.tierlistID))
+  }
 
   let topPercentile = 0
   if (completedTodayError) { throw completedTodayError }
