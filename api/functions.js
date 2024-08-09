@@ -396,7 +396,7 @@ export async function updateLeaderboard(points) {
 
   const { data: data2, error: error2 } = await supabase
   .from('leaderboard')
-  .upsert([{ id: userID, total_points: totalPoints }])
+  .upsert([{ id: userID, total_points: totalPoints }], { onConflict: 'id' })
   .eq('id', userID)
   .select()
 
