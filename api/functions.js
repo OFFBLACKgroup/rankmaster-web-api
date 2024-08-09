@@ -272,7 +272,7 @@ export async function calculatePoints(request) {
   }
   // await updateResult(request.predictions, data)
 
-  return { points, predictions: request.predictions, placement }
+  return { points, predictions: request.predictions, topPercentile }
 }
 
 export async function fetchDailyTierlist() {
