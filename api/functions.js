@@ -131,7 +131,7 @@ export async function signIn(email, password, anon) {
 }
 
 export async function getUserData() {
-  const id = (await supabase.auth.getUser()).data.user.id
+  const id = await getUserID()
 
   const { data, error: error1 } = await supabase
   .from('completed_tierlist_logs')
