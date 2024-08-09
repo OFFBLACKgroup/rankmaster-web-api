@@ -144,16 +144,6 @@ app.get('/signInAnonymous', async (req, res) => {
   }
 })
 
-app.get('/leaderboard', async (req, res) => {
-  try {
-    const token = await createToken()
-    res.json(token)
-  } catch (error) {
-    console.log(error)
-    res.status(404).send()
-  }
-})
-
 app.post('/updateUser', async (req, res) => {
   try {
     const message = await updateUser(req.body)
