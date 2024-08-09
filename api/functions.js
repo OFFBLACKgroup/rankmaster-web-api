@@ -356,7 +356,7 @@ export async function getRandomTierlist() {
       .select('id, topic_ID, name')
       .eq('is_premium', false)
       .not('id', 'in', completedIds)
-      .or('daily_added_date.neq.' + todaysDate + ',daily_added_date.is.null')
+      .or('daily_added_date.lt.' + todaysDate + ',daily_added_date.is.null')
 
     if (error) throw error
 
