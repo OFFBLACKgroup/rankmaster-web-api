@@ -177,7 +177,10 @@ export async function upgradeToPremium(req) {
 }
 
 export async function getUserID() {
-  return (await supabase.auth.getUser()).data.user.id
+  const { data, error } = await supabase.auth.getUser()
+  if (error) throw error
+  console.log(data)
+  return data.user.id
 }
 
 async function createUserLog(completedTierlists) {
@@ -393,7 +396,7 @@ export async function updateLeaderboard(points) {
 
   const { data: data2, error: error2 } = await supabase
   .from('leaderboard')
-  .upsert([{ id: userID, total_points: totalPoints }])
+  .upsert([{ id: userID, points: points }])
   .eq('id', userID)
   .select()
 
