@@ -221,7 +221,7 @@ async function updateResult(predictions, tierlistItems) {
   }
 }
 
-async function calculatePercentile(completedToday) {
+async function calculatePercentile(completedToday, points) {
   let topPercentile = 0
   if (completedToday.length > 0) {
     for (const item of completedToday) {
