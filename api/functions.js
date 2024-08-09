@@ -249,7 +249,7 @@ export async function calculatePoints(request) {
   const todaysDate = new Date().toISOString().slice(0, 10) // Formats: YYYY-MM-DD
 
   let completedToday, completedTodayError;
-  if (request.isDialyTierlist) {
+  if (request.isDailyTierlist) {
     ({ data: completedToday, error: completedTodayError } = await supabase
       .from('completed_tierlist_logs')
       .select('collected_points')
